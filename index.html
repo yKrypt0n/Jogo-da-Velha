@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Jogo da Velha</title>
+</head>
+<body>
+    <div class="jogo-velha">
+        <h2>Jogo da Velha</h2>
+        <div id="tabuleiro">
+            <div class="celula" onclick="fazerJogada(0)"></div>
+            <div class="celula" onclick="fazerJogada(1)"></div>
+            <div class="celula" onclick="fazerJogada(2)"></div>
+            <div class="celula" onclick="fazerJogada(3)"></div>
+            <div class="celula" onclick="fazerJogada(4)"></div>
+            <div class="celula" onclick="fazerJogada(5)"></div>
+            <div class="celula" onclick="fazerJogada(6)"></div>
+            <div class="celula" onclick="fazerJogada(7)"></div>
+            <div class="celula" onclick="fazerJogada(8)"></div>
+        </div>
+        <p id="status">Vez do jogador X</p>
+        <button onclick="reiniciarJogo()">Reiniciar</button>
+    </div>
+    <script>
+        let jogadorAtual = 'X';
+        let tabuleiro = ['','','','','','','','',''];
+        let jogoAtivo = true;
+
+        function fazerJogada(indice) {
+            if(tabuleiro[indice] === '' && jogoAtivo) {
+                tabuleiro[indice] = jogadorAtual;
+                document.getElementsByClassName('celula')[indice].innerText = jogadorAtual;
+                
+                if(verificarVitoria()) {
+                    document.getElementById('status').innerText = `Jogador ${jogadorAtual} venceu!`;
+                    jogoAtivo = false;
+                    return;
+                }
+                
+                if(tabuleiro.indexOf('') === -1) {
+                    document.getElementById('status').innerText = 'Empate!';
+                    jogoAtivo = false;
+                    return;
+                }
+                
+                jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
+                document.getElementById('status').innerText = `Vez do jogador ${jogadorAtual}`;
+            }
+        }
+
+        function verificarVitoria() {
+            const linhasVitoria = [
+                [0,1,2], [3,4,5], [6,7,8], // horizontais
+                [0,3,6], [1,4,7], [2,5,8], // verticais
+                [0,4,8], [2,4,6] // diagonais
+            ];
+
+            return linhasVitoria.some(linha => {
+                return linha.every(indice => {
+                    return tabuleiro[indice] === jogadorAtual;
+                });
+            });
+        }
+
+        function reiniciarJogo() {
+            jogadorAtual = 'X';
+            tabuleiro = ['','','','','','','','',''];
+            jogoAtivo = true;
+            
+            document.querySelectorAll('.celula').forEach(celula => celula.innerText = '');
+            document.getElementById('status').innerText = 'Vez do jogador X';
+        }
+    </script>
+</body>
+</html>
